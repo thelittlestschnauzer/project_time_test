@@ -1,0 +1,45 @@
+<%= form_with(model: project, local: true) do |form| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+      <% project.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_field :description %>
+  </div>
+
+  <h4>Tasks</h4>
+  <div data-controller="project-form">
+    <template data-target="project-form.template">
+      <%= form.fields_for :tasks, Task.new, child_index: 'NEW_RECORD' do |task| %>
+        <%= render 'task_fields', form: task %>
+      <% end %>
+    </template>
+
+      <%= form.fields_for :tasks do |task| %>
+        <%= render "task_fields", form: task %>
+      <% end %>
+
+      <div class="mb-3" data-target="project-form.links">
+        <%= link_to "Add Task", "#", class: 'btn btn-outline-primary', data: { action: "click->project-form#add_association" } %>
+      </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+</div>
